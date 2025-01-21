@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,54 +5,112 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Email Builder</title>
   <style>
+    /* General Styles */
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f7fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f2eded;
       margin: 0;
       padding: 0;
+      color: #ffffff;
     }
+
     .container {
       width: 100%;
-      max-width: 600px;
-      margin: 20px auto;
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 800px;
+      margin: 40px auto;
+      background-color: #292424;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
+
     h1 {
       text-align: center;
-      color: #007BFF;
+      color: #64b5f6;
+      margin-bottom: 20px;
+      font-size: 2rem;
     }
+
+    h3 {
+      color: #ffffff;
+      font-size: 1.25rem;
+      margin-bottom: 10px;
+    }
+
     .preview {
-      background-color: #f8f8f8;
+      background-color: #1f1f1f;
       padding: 20px;
       border-radius: 8px;
-      margin-top: 20px;
-      border: 1px solid #ddd;
+      margin-top: 30px;
+      border: 1px solid #444;
+      min-height: 200px;
     }
-    input[type="text"], textarea {
+
+    input[type="text"], textarea, input[type="file"] {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #444;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 1rem;
+      background-color: #080808;
+      color: #ffffff;
+      transition: border-color 0.3s ease;
     }
+
+    input[type="text"]:focus, textarea:focus, input[type="file"]:focus {
+      border-color: #64b5f6;
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 150px;
+    }
+
     button {
-      background-color: #007BFF;
+      background-color: #64b5f6;
       color: white;
-      padding: 10px 15px;
+      padding: 12px 20px;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 1rem;
+      margin-right: 10px;
+      transition: background-color 0.3s ease;
     }
+
     button:hover {
-      background-color: #0056b3;
+      background-color: #42a5f5;
     }
+
+    button:disabled {
+      background-color: #333;
+      cursor: not-allowed;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+    }
+
     #imagePreview {
-      margin-top: 20px;
       max-width: 100%;
       height: auto;
+      margin-top: 20px;
+      border-radius: 8px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+      }
     }
   </style>
 </head>
@@ -62,12 +119,15 @@
   <div class="container">
     <h1>Email Template Builder</h1>
     <form id="emailForm">
-      <input type="text" id="title" placeholder="Title" required><br>
-      <textarea id="content" placeholder="Content" rows="4" required></textarea><br>
-      <textarea id="footer" placeholder="Footer" rows="2" required></textarea><br>
+      <input type="text" id="title" placeholder="Enter email title" required><br>
+      <textarea id="content" placeholder="Enter email content" rows="4" required></textarea><br>
+      <textarea id="footer" placeholder="Enter footer text" rows="2" required></textarea><br>
       <input type="file" id="image" accept="image/*"><br>
-      <button type="button" onclick="handleSaveTemplate()">Save Template</button>
-      <button type="button" onclick="handleDownloadTemplate()">Download Template</button>
+
+      <div class="button-group">
+        <button type="button" id="saveButton" onclick="handleSaveTemplate()">Save Template</button>
+        <button type="button" id="downloadButton" onclick="handleDownloadTemplate()">Download Template</button>
+      </div>
     </form>
 
     <div class="preview" id="preview-container">
@@ -105,10 +165,10 @@
       const footer = document.getElementById('footer').value;
 
       let previewHTML = `
-        <h1>${title}</h1>
-        <p>${content}</p>
+        <h1 style="color: #64b5f6;">${title}</h1>
+        <p style="font-size: 1rem; color: #ffffff;">${content}</p>
         ${imageUrls.map(url => `<img src="${url}" alt="Uploaded Image" style="max-width: 100%; margin-top: 10px;" />`).join('')}
-        <footer>${footer}</footer>
+        <footer style="font-size: 0.9rem; color: #ccc; margin-top: 20px;">${footer}</footer>
       `;
 
       document.getElementById('email-preview').innerHTML = previewHTML;
@@ -127,7 +187,7 @@
         body: JSON.stringify(emailConfig)
       });
 
-      alert("Template saved!");
+      alert("Template saved successfully!");
     }
 
     // Download the template
