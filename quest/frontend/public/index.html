@@ -1,1 +1,154 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Builder</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f7fa;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #007BFF;
+    }
+    .preview {
+      background-color: #f8f8f8;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      border: 1px solid #ddd;
+    }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #imagePreview {
+      margin-top: 20px;
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Email Template Builder</h1>
+    <form id="emailForm">
+      <input type="text" id="title" placeholder="Title" required><br>
+      <textarea id="content" placeholder="Content" rows="4" required></textarea><br>
+      <textarea id="footer" placeholder="Footer" rows="2" required></textarea><br>
+      <input type="file" id="image" accept="image/*"><br>
+      <button type="button" onclick="handleSaveTemplate()">Save Template</button>
+      <button type="button" onclick="handleDownloadTemplate()">Download Template</button>
+    </form>
+
+    <div class="preview" id="preview-container">
+      <h3>Preview:</h3>
+      <div id="email-preview"></div>
+    </div>
+  </div>
+
+  <script>
+    let imageUrls = [];
+
+    // Handle image upload
+    document.getElementById('image').addEventListener('change', handleImageUpload);
+
+    async function handleImageUpload(event) {
+      const file = event.target.files[0];
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/uploadImage", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+      if (data.imageUrl) {
+        imageUrls.push(data.imageUrl);
+        updatePreview();
+      }
+    }
+
+    function updatePreview() {
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      const footer = document.getElementById('footer').value;
+
+      let previewHTML = `
+        <h1>${title}</h1>
+        <p>${content}</p>
+        ${imageUrls.map(url => `<img src="${url}" alt="Uploaded Image" style="max-width: 100%; margin-top: 10px;" />`).join('')}
+        <footer>${footer}</footer>
+      `;
+
+      document.getElementById('email-preview').innerHTML = previewHTML;
+    }
+
+    // Save the template
+    async function handleSaveTemplate() {
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      const footer = document.getElementById('footer').value;
+
+      const emailConfig = { title, content, footer, imageUrls };
+      await fetch("/uploadEmailConfig", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(emailConfig)
+      });
+
+      alert("Template saved!");
+    }
+
+    // Download the template
+    async function handleDownloadTemplate() {
+      const title = document.getElementById('title').value;
+      const content = document.getElementById('content').value;
+      const footer = document.getElementById('footer').value;
+
+      const response = await fetch("/renderAndDownloadTemplate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, content, footer, imageUrls })
+      });
+
+      const blob = await response.blob();
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = "email_template.html";
+      link.click();
+    }
+  </script>
+
+</body>
+</html>
