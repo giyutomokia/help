@@ -1,0 +1,126 @@
+/* Global Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f7fa;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.email-builder {
+  max-width: 1200px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+.email-builder-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.editor-section {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.form-section {
+  flex: 1;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+.input-field {
+  margin-bottom: 20px;
+}
+
+.input-field label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.input-field input,
+.input-field textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+textarea {
+  height: 150px;
+}
+
+.image-upload {
+  margin-bottom: 20px;
+}
+
+.image-upload label {
+  display: block;
+  font-weight: bold;
+}
+
+.image-preview {
+  margin-top: 10px;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.save-button,
+.download-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.save-button {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.download-button {
+  background-color: #007BFF;
+  color: #fff;
+}
+
+.save-button:hover {
+  background-color: #45a049;
+}
+
+.download-button:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .email-builder-container {
+    flex-direction: column;
+  }
+
+  .editor-section {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+}
